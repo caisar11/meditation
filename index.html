@@ -8,7 +8,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -24,6 +24,9 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
+
+  // 리다이렉트 후 결과 처리
+  getRedirectResult(auth).catch((e) => console.error('redirect error', e));
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -50,7 +53,7 @@
       const btn = document.getElementById('loginBtn');
       btn.disabled = true;
       btn.textContent = '로그인 중...';
-      await signInWithPopup(auth, provider);
+      await signInWithRedirect(auth, provider);
     } catch(e) {
       console.error(e);
       const btn = document.getElementById('loginBtn');
